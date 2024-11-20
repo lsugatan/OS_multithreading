@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 	gettimeofday(&et4, NULL);
 	free_matrix(matrix1);
 	free_matrix(matrix2);
-	result = alloc_matrix();
+	free_matrix(result);
 
 	matrix1 = matrix2 = result = NULL;
 
