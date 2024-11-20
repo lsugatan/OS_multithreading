@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <stdlib.>
+#include <uinstd.h>
 #include <getopt.h>
 
 #ifndef MAX_DIM
@@ -13,14 +13,14 @@
 
 static float **matrix1 = NULL;
 static float **matrix2 = NULL;
-static float **result = NULL;
+static float **matrix3 = NULL;
 static int dim = DEF_DIM;
 
 float** alloc_matrix(void);					// Used to allocate the matrix
 void free_matrix(float **);					// Used to free matrix in all dimensions
 void init(float **, float **, float **); 	// Initializes all elements in matrix
 void op_mat(float **);						// Outputs the result of the matrix	
-void mult(void);							// Performs the matrix multiplication
+void mult(void);
 
 int main(int argc, char *argv[]) {
 
@@ -93,7 +93,7 @@ float** alloc_matrix(void) {
 }
 
 
-void free_matrix(float** mat) {
+void free_matrix(float **) {
 
 	int i = -1;
 
@@ -108,14 +108,14 @@ void free_matrix(float** mat) {
 }
 
 
-void init(float** mat1, float** mat2, float** res) {
+void init(float **, float **, float **) {
 
 	int i = -1;
 	int j = -1;
 
 	// Initialize all values within the matrix
 	// Will be using arbitrary, hard coded values instead of random number generator to save time
-	for (i = 0; i < dim; i++) {
+	for (int i = 0; i < dim; i++) {
 		for (j = 0; j < dim; j++) {
 			mat1[i][j] = (i + j) * 2.0;
 			mat2[i][j] = (i + j) * 3.0;
@@ -139,32 +139,12 @@ void op_mat(float **) {
 		exit(17);
 	}
 
-	// Iterate through matrix and display to file 
 	for (i = 0; i < dim; i++) {
 		for (j = 0; j < dim; j++) {
-			fprintf(op, "%8.2f ", result[i][j]); // Print floating point values with 2 decimal places, 8 width total 
+			fprintf(op, "%8.2f ", result[i][j]); // Print 
 		}
 		fprintf(op, "\n");
-	}
 
-	fclose(op);
-
-}
-
-
-void mult(void) {
-
-	int i = -1;
-	int j = -1;
-	int k = -1;
-
-	for (i = 0; i < dim; i++) { // For each column in matrix 1
-		for (j = 0; j < dim; j++) { // For each column in matrix 2
-			for (k = 0; k < dim; k++) { // For each row in matrix 1 and 2
-				// Result will catch the product of the element in matrix 1 and matrix 2
-				result[i][j] += matrix1[i][k] * matrix2[k][j];
-			}
-		}
 	}
 
 }
