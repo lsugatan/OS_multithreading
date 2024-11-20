@@ -172,7 +172,7 @@ void op_mat(float **) {
 	int i = -1;
 	int j = -1;
 
-#define FILE_NAME "mm1.txt"
+#define FILE_NAME "mm2.txt"
 	op = fopen(FILE_NAME, "w");
 	if (op == NULL) {
 		perror("Could not open file: " FILE_NAME);
