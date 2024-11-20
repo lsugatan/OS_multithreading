@@ -1,4 +1,5 @@
 // Implement time functionality 
+// Will now track the time of execution from mm1
 
 #include <stdio.h>
 #include <stdlib.h>
