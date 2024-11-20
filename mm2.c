@@ -1,7 +1,10 @@
+// Implement time functionality 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <sys/time.h>
 
 #ifndef MAX_DIM
 #define MAX_DIM 4000
@@ -10,6 +13,8 @@
 #ifndef DEF_DUM
 #define DEF_DIM 1000
 #endif // MAX_DIM
+
+#define MICROSECONDS_PER_SECOND 1000000.0
 
 static float **matrix1 = NULL;
 static float **matrix2 = NULL;
@@ -21,8 +26,16 @@ void free_matrix(float **);					// Used to free matrix in all dimensions
 void init(float **, float **, float **); 	// Initializes all elements in matrix
 void op_mat(float **);						// Outputs the result of the matrix	
 void mult(void);							// Performs the matrix multiplication
+double elapse_time(struct timeval *, struct timeval *);	// Calculates the elapsed time of a process 
 
 int main(int argc, char *argv[]) {
+
+	struct timeval et0;
+	struct timeval et1;
+	struct timeval et2;
+	struct timeval et3;
+	struct timeval et4;
+	struct timeval et5;
 
 	{
 		int opt = -1;
@@ -54,20 +67,46 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	gettimeofday(&et0, NULL);
+
 	matrix1 = alloc_matrix();
 	matrix2 = alloc_matrix();
 	result = alloc_matrix();
 
+	gettimeofday(&et1, NULL);
+
 	init(matrix1, matrix2, result);
 
+	gettimeofday(&et2, NULL);
+
 	mult();
+
+	gettimeofday(&et3, NULL);
 	op_mat(result);
 
+	gettimeofday(&et4, NULL);
 	free_matrix(matrix1);
 	free_matrix(matrix2);
 	result = alloc_matrix();
 
 	matrix1 = matrix2 = result = NULL;
+
+	gettimeofday(&et5, NULL);
+	{
+		double total_time = elapse_time(&et0, &et5);
+		double alloc_time = elapse_time(&et0, &et1);
+		double init_time = elapse_time(&et1, &et2);
+		double comp_time = elapse_time(&et2, &et3);
+		double op_time = elapse_time(&et3, &et4);
+		double td_time = elapse_time(&et4, &et5);
+
+		printf("Total time: %8.2lf\n", total_time);
+		printf("  Alloc time: %8.2lf\n", alloc_time);
+		printf("  Init  time: %8.2lf\n", init_time);
+		printf("  Comp  time: %8.2lf\n", comp_time);
+		printf("  O/P   time: %8.2lf\n", op_time);
+		printf("  T/D   time: %8.2lf\n", td_time);
+	}
 
 	return EXIT_SUCCESS;
 
@@ -151,6 +190,15 @@ void op_mat(float **) {
 
 }
 
+double elapse_time(struct timeval *t0, struct timeval *t1) {
+
+	double et = (((double) (t1->tv_usec - t0->tv_usec)) // Get elapsed time of microseconds, end time - start time
+					/ MICROSECONDS_PER_SECOND) 	// Convert microseconds to seconds by dividing by microseconds per second
+			+ ((double) (t1->tv_sec - t0->tv_sec)); // Add the difference between end and start, in seconds
+
+	return et;
+
+}
 
 void mult(void) {
 
